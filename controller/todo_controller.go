@@ -13,6 +13,7 @@ import (
 
 type TodoController interface {
 	GetTodos(w http.ResponseWriter, r *http.Request)
+	GetTodo(w http.ResponseWriter, r *http.Request)
 	PostTodo(w http.ResponseWriter, r *http.Request)
 	PutTodo(w http.ResponseWriter, r *http.Request)
 	DeleteTodo(w http.ResponseWriter, r *http.Request)
@@ -45,6 +46,20 @@ func (tc *todoController) GetTodos(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(output)
+}
+
+func (tc *todoController) GetTodo(w http.ResponseWriter, r *http.Request) {
+
+	var todo entity.TodoEntity
+	todo.Id = 2
+	todo.Title = "Hoge"
+	todo.Content = "Fuga"
+		
+	output, _ := json.MarshalIndent(todo, "", "\t\t")
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(output)
+	return
 }
 
 func (tc *todoController) PostTodo(w http.ResponseWriter, r *http.Request) {

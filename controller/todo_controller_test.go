@@ -75,6 +75,29 @@ func TestGetTodos_Error(t *testing.T) {
 	}
 }
 
+func TestGetTodo_OK(t *testing.T) {
+	w := httptest.NewRecorder()
+	r := httptest.NewRequest("GET", "/todo/2",nil)
+
+	target := NewTodoController(&test.MockTodoRepository{})
+	target.GetTodo(w, r)
+
+	if w.Code != 200 {
+		t.Errorf("Response cod is %v", w.Code)
+	}
+	if w.Header().Get("Content-Type") != "application/json" {
+		t.Errorf("Content-Type is %v", w.Header().Get("Content-Type"))
+	}
+
+	body := make([]byte, w.Body.Len())
+	w.Body.Read(body)
+	var todoResponse dto.TodoResponse
+	json.Unmarshal(body, &todoResponse)
+	if todoResponse.Id != 2 {
+		t.Errorf("Response is %v", todoResponse.Id)
+	}
+}
+
 func TestPostTodo_OK(t *testing.T) {
 	json := strings.NewReader(`{"title":"test-title","content":"test-content"}`)
 	w := httptest.NewRecorder()
